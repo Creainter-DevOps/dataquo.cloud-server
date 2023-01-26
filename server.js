@@ -5,28 +5,59 @@ import fs from 'fs';
 import http from 'http';
 import https from 'https';
 import { PathExist, __rootDir, IsDir, EnumDir, ParseToHtml } from './utility.js';
+import {MongoClient} from 'mongodb';
 
 console.log('CSV', csv);
 
+function db(cb) {
+  let url = "mongodb://localhost:27017/";
+  return MongoClient.connect(
+      url,
+      { useNewUrlParser: true, useUnifiedTopology: true },
+      (err, client) => {
+        if (err) throw err;
+        cb(client);
+      });
+
+}
+const hash     = 'ef499bd1-891e-41aa-aa64-72b93a75dee7';
 
 const credentials = {
-    key: fs.readFileSync('/var/www/nginx/ssl/dataquo.cloud.key'),
-    cert: fs.readFileSync('/var/www/nginx/ssl/dataquo.cloud.pem')
-}
+  key: fs.readFileSync('/var/www/nginx/ssl/dataquo.cloud.key'),
+  cert: fs.readFileSync('/var/www/nginx/ssl/dataquo.cloud.pem')
+};
 
-const httpApp = express();          //http to https redirection
+const httpApp = express();
 httpApp.get('*', (req, res) => {
     res.redirect(`https://sorrow.live${req.baseUrl}`);
 });
 
-
 const app = express();
 
 
+app.get('/mongodb', (req, res) => {
+  res.status(200);
+  res.setHeader("Content-Type", "application/json");
+  res.write('[');
+  db(function(client) {
+    var stream = client
+      .db('datosabiertos')
+      .collection(hash)
+      .find()
+      .stream();
+    stream.on('data', function(doc) {
+      delete doc['_id'];
+      res.write(JSON.stringify(doc) + ',');
+    });
+    stream.on('end', function() {
+      res.write(']');
+      res.send();
+    });
+  });
+});
 app.post('/api/3/action/datastore_search', (req, res) => {
   res.status(200).download('response.json');
 });
-
 
 app.get('/api/3/action/datastore_search2', (req, res) => {
   res.set({ 'content-type': 'application/json; charset=utf-8' });
