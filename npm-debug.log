@@ -1,0 +1,169 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'install' ]
+2 info using npm@3.5.2
+3 info using node@v8.10.0
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readLocalPackageData
+7 silly install normalizeTree
+8 silly loadCurrentTree Finishing
+9 silly loadIdealTree Starting
+10 silly install loadIdealTree
+11 silly cloneCurrentTree Starting
+12 silly install cloneCurrentTreeToIdealTree
+13 silly cloneCurrentTree Finishing
+14 silly loadShrinkwrap Starting
+15 silly install loadShrinkwrap
+16 silly loadShrinkwrap Finishing
+17 silly loadAllDepsIntoIdealTree Starting
+18 silly install loadAllDepsIntoIdealTree
+19 silly fetchNamedPackageData csv
+20 silly mapToRegistry name csv
+21 silly mapToRegistry using default registry
+22 silly mapToRegistry registry https://registry.npmjs.org/
+23 silly mapToRegistry uri https://registry.npmjs.org/csv
+24 silly fetchNamedPackageData csv-parser
+25 silly mapToRegistry name csv-parser
+26 silly mapToRegistry using default registry
+27 silly mapToRegistry registry https://registry.npmjs.org/
+28 silly mapToRegistry uri https://registry.npmjs.org/csv-parser
+29 silly fetchNamedPackageData express
+30 silly mapToRegistry name express
+31 silly mapToRegistry using default registry
+32 silly mapToRegistry registry https://registry.npmjs.org/
+33 silly mapToRegistry uri https://registry.npmjs.org/express
+34 silly fetchNamedPackageData mongodb
+35 silly mapToRegistry name mongodb
+36 silly mapToRegistry using default registry
+37 silly mapToRegistry registry https://registry.npmjs.org/
+38 silly mapToRegistry uri https://registry.npmjs.org/mongodb
+39 silly fetchNamedPackageData pg
+40 silly mapToRegistry name pg
+41 silly mapToRegistry using default registry
+42 silly mapToRegistry registry https://registry.npmjs.org/
+43 silly mapToRegistry uri https://registry.npmjs.org/pg
+44 silly fetchNamedPackageData readline
+45 silly mapToRegistry name readline
+46 silly mapToRegistry using default registry
+47 silly mapToRegistry registry https://registry.npmjs.org/
+48 silly mapToRegistry uri https://registry.npmjs.org/readline
+49 verbose request uri https://registry.npmjs.org/csv
+50 verbose request no auth needed
+51 info attempt registry request try #1 at 12:17:21 AM
+52 verbose request id 1caf4ac461517bbe
+53 verbose etag W/"7ea3b748d8f50661811a81d583172626"
+54 verbose lastModified Wed, 30 Nov 2022 12:22:37 GMT
+55 http request GET https://registry.npmjs.org/csv
+56 verbose request uri https://registry.npmjs.org/csv-parser
+57 verbose request no auth needed
+58 info attempt registry request try #1 at 12:17:21 AM
+59 verbose etag W/"f0d9fe2a2cb09947a8f9121d95063a5b"
+60 verbose lastModified Tue, 14 Jun 2022 05:17:20 GMT
+61 http request GET https://registry.npmjs.org/csv-parser
+62 verbose request uri https://registry.npmjs.org/express
+63 verbose request no auth needed
+64 info attempt registry request try #1 at 12:17:21 AM
+65 verbose etag W/"e3a09f2a4bf803dd9f449b7ffa84c34f"
+66 verbose lastModified Wed, 07 Dec 2022 14:41:53 GMT
+67 http request GET https://registry.npmjs.org/express
+68 verbose request uri https://registry.npmjs.org/pg
+69 verbose request no auth needed
+70 info attempt registry request try #1 at 12:17:21 AM
+71 verbose etag W/"c21768916165b9999136f2df9bd01bf9"
+72 verbose lastModified Thu, 15 Dec 2022 09:50:25 GMT
+73 http request GET https://registry.npmjs.org/pg
+74 verbose request uri https://registry.npmjs.org/readline
+75 verbose request no auth needed
+76 info attempt registry request try #1 at 12:17:21 AM
+77 verbose etag W/"3658920aada68650d3742bd8b8affec4"
+78 verbose lastModified Sun, 26 Jun 2022 09:18:00 GMT
+79 http request GET https://registry.npmjs.org/readline
+80 verbose request uri https://registry.npmjs.org/mongodb
+81 verbose request no auth needed
+82 info attempt registry request try #1 at 12:17:21 AM
+83 verbose etag W/"fab8af9f51d211ff8d3c8632c3f36e88"
+84 verbose lastModified Tue, 24 Jan 2023 01:14:31 GMT
+85 http request GET https://registry.npmjs.org/mongodb
+86 http 304 https://registry.npmjs.org/csv
+87 verbose headers { date: 'Fri, 27 Jan 2023 00:17:21 GMT',
+87 verbose headers   connection: 'keep-alive',
+87 verbose headers   'cf-ray': '78fd4e0fead422eb-ORD',
+87 verbose headers   age: '116',
+87 verbose headers   'cache-control': 'public, max-age=300',
+87 verbose headers   etag: '"7ea3b748d8f50661811a81d583172626"',
+87 verbose headers   'last-modified': 'Wed, 30 Nov 2022 12:22:37 GMT',
+87 verbose headers   vary: 'Accept-Encoding',
+87 verbose headers   'cf-cache-status': 'HIT',
+87 verbose headers   'x-amz-replication-status': 'COMPLETED',
+87 verbose headers   server: 'cloudflare' }
+88 silly get cb [ 304,
+88 silly get   { date: 'Fri, 27 Jan 2023 00:17:21 GMT',
+88 silly get     connection: 'keep-alive',
+88 silly get     'cf-ray': '78fd4e0fead422eb-ORD',
+88 silly get     age: '116',
+88 silly get     'cache-control': 'public, max-age=300',
+88 silly get     etag: '"7ea3b748d8f50661811a81d583172626"',
+88 silly get     'last-modified': 'Wed, 30 Nov 2022 12:22:37 GMT',
+88 silly get     vary: 'Accept-Encoding',
+88 silly get     'cf-cache-status': 'HIT',
+88 silly get     'x-amz-replication-status': 'COMPLETED',
+88 silly get     server: 'cloudflare' } ]
+89 verbose etag https://registry.npmjs.org/csv from cache
+90 verbose get saving csv to /home/desarrollo/.npm/registry.npmjs.org/csv/.cache.json
+91 http 304 https://registry.npmjs.org/express
+92 verbose headers { date: 'Fri, 27 Jan 2023 00:17:21 GMT',
+92 verbose headers   connection: 'keep-alive',
+92 verbose headers   'cf-ray': '78fd4e0fe9afe100-ORD',
+92 verbose headers   age: '57',
+92 verbose headers   'cache-control': 'public, max-age=300',
+92 verbose headers   etag: '"e3a09f2a4bf803dd9f449b7ffa84c34f"',
+92 verbose headers   'last-modified': 'Wed, 07 Dec 2022 14:41:53 GMT',
+92 verbose headers   vary: 'Accept-Encoding',
+92 verbose headers   'cf-cache-status': 'HIT',
+92 verbose headers   'x-amz-replication-status': 'COMPLETED',
+92 verbose headers   server: 'cloudflare' }
+93 silly get cb [ 304,
+93 silly get   { date: 'Fri, 27 Jan 2023 00:17:21 GMT',
+93 silly get     connection: 'keep-alive',
+93 silly get     'cf-ray': '78fd4e0fe9afe100-ORD',
+93 silly get     age: '57',
+93 silly get     'cache-control': 'public, max-age=300',
+93 silly get     etag: '"e3a09f2a4bf803dd9f449b7ffa84c34f"',
+93 silly get     'last-modified': 'Wed, 07 Dec 2022 14:41:53 GMT',
+93 silly get     vary: 'Accept-Encoding',
+93 silly get     'cf-cache-status': 'HIT',
+93 silly get     'x-amz-replication-status': 'COMPLETED',
+93 silly get     server: 'cloudflare' } ]
+94 verbose etag https://registry.npmjs.org/express from cache
+95 verbose get saving express to /home/desarrollo/.npm/registry.npmjs.org/express/.cache.json
+96 verbose stack Error: Missing required argument #1
+96 verbose stack     at andLogAndFinish (/usr/share/npm/lib/fetch-package-metadata.js:31:3)
+96 verbose stack     at fetchPackageMetadata (/usr/share/npm/lib/fetch-package-metadata.js:51:22)
+96 verbose stack     at resolveWithNewModule (/usr/share/npm/lib/install/deps.js:456:12)
+96 verbose stack     at /usr/share/npm/lib/install/deps.js:457:7
+96 verbose stack     at /usr/share/npm/node_modules/iferr/index.js:13:50
+96 verbose stack     at /usr/share/npm/lib/fetch-package-metadata.js:37:12
+96 verbose stack     at addRequestedAndFinish (/usr/share/npm/lib/fetch-package-metadata.js:82:5)
+96 verbose stack     at returnAndAddMetadata (/usr/share/npm/lib/fetch-package-metadata.js:117:7)
+96 verbose stack     at pickVersionFromRegistryDocument (/usr/share/npm/lib/fetch-package-metadata.js:134:20)
+96 verbose stack     at /usr/share/npm/node_modules/iferr/index.js:13:50
+97 verbose cwd /var/www/dataquo.cloud-server
+98 error Linux 5.4.0-1098-gcp
+99 error argv "/usr/bin/node" "/usr/bin/npm" "install"
+100 error node v8.10.0
+101 error npm  v3.5.2
+102 error code EMISSINGARG
+103 error typeerror Error: Missing required argument #1
+103 error typeerror     at andLogAndFinish (/usr/share/npm/lib/fetch-package-metadata.js:31:3)
+103 error typeerror     at fetchPackageMetadata (/usr/share/npm/lib/fetch-package-metadata.js:51:22)
+103 error typeerror     at resolveWithNewModule (/usr/share/npm/lib/install/deps.js:456:12)
+103 error typeerror     at /usr/share/npm/lib/install/deps.js:457:7
+103 error typeerror     at /usr/share/npm/node_modules/iferr/index.js:13:50
+103 error typeerror     at /usr/share/npm/lib/fetch-package-metadata.js:37:12
+103 error typeerror     at addRequestedAndFinish (/usr/share/npm/lib/fetch-package-metadata.js:82:5)
+103 error typeerror     at returnAndAddMetadata (/usr/share/npm/lib/fetch-package-metadata.js:117:7)
+103 error typeerror     at pickVersionFromRegistryDocument (/usr/share/npm/lib/fetch-package-metadata.js:134:20)
+103 error typeerror     at /usr/share/npm/node_modules/iferr/index.js:13:50
+104 error typeerror This is an error with npm itself. Please report this error at:
+104 error typeerror     <http://github.com/npm/npm/issues>
+105 verbose exit [ 1, true ]

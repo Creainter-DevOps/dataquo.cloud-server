@@ -7,107 +7,143 @@ import https from 'https';
 import {MongoClient} from 'mongodb';
 import pg from 'pg';
 import {exec} from 'child_process';
-
-
 import { PathExist, __rootDir, IsDir, EnumDir, ParseToHtml } from './utility.js';
-
-
-const hash     = 'ef499bd1-891e-41aa-aa64-72b93a75dee7';
-const filepath = "datasets/" + hash + ".csv";
-//"5a24370e-da9f-4519-87e7-a9565c08670f.csv";
-const recurso_id = 43;
-
-var xloader_id = null;
-
-console.log('pg', pg.Pool);
 
 const pool = new pg.Pool({
   user: 'postgres',
   database: 'creainter',
   password: 'meteLPBDo0gmsc3d',
   port: 5432,
-  host: '10.21.32.3',
+  host: '35.202.192.69',
 });
 
 
-async function xloader_inicio() {
-  var xloader = await pool.query("SELECT * FROM datosabiertos.fn_xloader_inicio($1)", [recurso_id]);
+const server = 'pc-01';
+const app = express();
+
+
+app.get('/api/xloader/start/:resource_id', async (req,res) => {
+
+  const recurso_id = req.params.resource_id; 
+
+  console.log("recurso  => " + recurso_id );
+  var xloader = await xloader_puedo_iniciar(recurso_id);
+  if(!xloader.iniciar) {
+      return res.json({'status' : false, 'message': 'El recurso ya esta en proceso o tiene un proceso pendiente'});
+  }
+  xloader = await xloader_inicio(recurso_id);
+  return res.json({'status' : true, 'message': 'Carga Programada', 'xloader_id' : xloader.xloader_id });
+});
+
+async function start_process(){
+  var loader = await process_queue();
+
+  if(loader.success) {
+      console.log("Ejecuntado procesos en espera. => ", loader );
+      var res = await pool.query("SELECT * FROM datosabiertos.fn_xloader_running($1,$2);",[ loader.xloader_id, server ]);
+      if(res.rowCount != 1) {
+          return false;
+      }
+      if(res.rows[0].ejecutar) {
+        exec("node xloader.js submit " + loader.xloader_id + " " + loader.recurso_id, { maxBuffer: 1024 * 5000000 }, (error, stdout, stderr) => {
+          if ( error ) {
+              console.log(`error: ${error.message}`);
+              return;
+          }
+          if ( stderr ) {
+              console.log(`stderr: ${stderr}`);
+              return;
+          }
+          console.log(`stdout: ${stdout}`);
+          start_process();
+        });
+      }
+  } else if(typeof loader.xloader_id !== 'undefined') {
+      if(!pidIsRunning(loader.pid)) {
+          console.log('Proceso Killed', loader);
+          await pool.query("SELECT * FROM datosabiertos.fn_xloader_errado($1,$2);",[ loader.xloader_id, 'pid killed']);
+      }
+      console.log("Procesos en espera culminados");   
+  }
+}
+
+
+setInterval(start_process, 2000);
+
+async function process_queue(xloader_id = 0){
+
+  var loaderQueue  = await pool.query("SELECT * FROM datosabiertos.fn_xloader_en_proceso($1);", [server]);
+
+  if ( loaderQueue.rowCount == 1 ){
+      var loader = loaderQueue.rows[0];
+      if( loader.estado == 'procesando') {
+        return { success: false, xloader_id: loader.id, recurso_id : loader.recurso_id };
+
+      } else if ( loader.estado == 'pendiente' || xloader_id == loader.id) {
+        return { success: true, xloader_id: loader.id, recurso_id : loader.recurso_id };     
+
+      } else {
+         return { success: false };
+      }
+  } else {
+    return { success: false};
+  }  
+}
+
+function pidIsRunning(pid) {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+app.get('/api/xloader/stop/:xloader', async (req,res) => {
+  const xloader_id =  parseInt(req.params.xloader);
+  await xloader_detener(xloader_id);
+
+  const xloaderResult =  await pool.query("SELECT * FROM datosabiertos.xloader where id = $1",[xloader_id ]);
+  console.log(xloaderResult)   
+  if ( xloaderResult.rowCount == 1 ){
+
+    const  xloader = xloaderResult.rows[0] ;
+    	
+    exec("sudo kill -9  " + xloader.pid, (error, stdout, stderr) => {
+
+    if (error) {
+        console.log(`error: ${error.message}`);
+        return;
+    }
+    if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+    }
+    console.log(`stdout: ${stdout}`);
+  });
+
+  }
+  res.json({"status":true ,"message":"Proceso cancelado","xloader_id": xloader_id  })  
+})
+
+app.get('/api/xloader/status/:xloader_id' ,async (req,res) => {
+  const xloader_id = req.params.xloader_id	
+  const logResult = await pool.query("select * from datosabiertos.xloader_log where loader_id = $1 order by fecha desc",[ xloader_id  ])  
+  const logs = logResult.rows;	
+  res.json({ 'status':true, 'logs' : logs });
+}); 
+
+async function xloader_puedo_iniciar(recurso_id) {
+  var xloader = await pool.query("SELECT * FROM datosabiertos.fn_xloader_puedo_iniciar($1)", [recurso_id]);
+  return xloader.rows[0];
+}
+async function xloader_detener(xloader_id) {
+  var xloader = await pool.query("SELECT * FROM datosabiertos.fn_xloader_detener($1)", [xloader_id]);
   return xloader.rows[0];
 }
 async function xloader_fin(params) {
   var xloader = await pool.query("SELECT * FROM datosabiertos.fn_xloader_fin($1, $2, $3, $4)", params);
   return xloader.rows[0];
 }
-var xloader = await xloader_inicio();
-xloader_id = xloader.xloader_id;
 
-console.log('xloader_id', xloader_id);
-
-function db(cb) {
-  let url = "mongodb://localhost:27017/";
-  return MongoClient.connect(
-      url,
-      { useNewUrlParser: true, useUnifiedTopology: true },
-      (err, client) => {
-        if (err) throw err;
-        cb(client);
-      });
-
-}
-var columns = {};
-var cantidad = 0;
-
-db(function(client) {
-  var ccc = 0;
-
-  let readStream = fs.createReadStream(filepath, {
-    autoClose: true,
-    encoding: 'utf8'
-  })
-  .on('error', () => {
-    console.log('ERRROR');
-  })
-  .pipe(csv({
-    delimiter: ",",
-    quote: '"',
-  }))
-  .on('data', function(line) {
-    cantidad++;
-    for(var key in line) {
-      if(line.hasOwnProperty(key)) {
-        if(typeof columns[key] === 'undefined') {
-          columns[key] = {
-            selectable: true,
-            data: {}  
-          };
-        }
-        if(typeof columns[key][line[key]] === 'undefined') {
-          columns[key].data[line[key]] = 0;
-        }
-        if(columns[key].selectable) {
-          columns[key].data[line[key]]++;
-          if(Object.keys(columns[key].data) > 1000) {
-            columns[key].selectable = false;
-          }
-        }
-      }
-    }
-    client
-      .db('datosabiertos')
-      .collection(hash)
-      .insertOne(line);
-      console.log(cantidad);
-  })
-  .on('end', () => {
-    console.log("read done");
-    let columnas = Object.keys(columns);
-    console.log('columnas', columnas);
-    for(var index in columnas) {
-      if(columnas.hasOwnProperty(index)) {
-        pool.query("SELECT datosabiertos.fn_xloader_diccionario($1, $2)", [xloader_id, columnas[index]]);
-      }
-    }
-    var xloader = xloader_fin([xloader_id, columnas.length, cantidad, 'csv']);
-    console.log('fin', xloader);
-  });
-});
+app.listen(9080);
+console.log( "LISTEN 9080" );

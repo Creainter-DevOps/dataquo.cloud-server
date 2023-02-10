@@ -27669,7 +27669,8 @@ if (isNodeModule) {
       name = name.replace('dataset_', 'package_');
     }
     var options = {
-      url: this.endpoint + '/3/action/' + name,
+      //url: this.endpoint + '//action/' + name,
+      url: this.endpoint + '/4/action/' + name,
       data: data,
       type: 'POST'
     };
@@ -27691,18 +27692,24 @@ if (isNodeModule) {
   // Primarily for use by Recline backend below
   my.Client.prototype.datastoreQuery = function(queryObj, cb) {
     var actualQuery = my._normalizeQuery(queryObj);
-    this.action('datastore_search', actualQuery, function(err, results) {
+    this.action('datastore_search', actualQuery, function(err,results) {
       // map ckan types to our usual types ...
+	    // 
+	    //
+      //console.log(err );	     
+      //console.log(results );	     
       if(typeof results === 'undefined') {
         return;
       }
       if(typeof results.result === 'undefined') {
         return;
       }
+	    
       var fields = _.map(results.result.fields, function(field) {
         field.type = field.type in my.ckan2JsonTableSchemaTypes ? my.ckan2JsonTableSchemaTypes[field.type] : field.type;
         return field;
       });
+	    
       var out = {
         total: results.result.total,
         fields: fields,
@@ -32323,7 +32330,9 @@ function countResults(count){
  //console.log('list', resultsRecord );
  const btnFilter = document.querySelector('.download-filter')
  if ( filterOk() == 'block' && count <= 300000 ) {
+   if(btnFilter){
    btnFilter.style.display  = 'block';	
+   }
  }
 
 }
